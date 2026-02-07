@@ -1,0 +1,1422 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DermoEstética | Medicina Estética de Élite Bolivia</title>
+    <!-- Bibliotecas Externas -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link rel="icon" type="image/x-icon" href="favicon.ico" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Display:ital,wght@0,300;0,400;0,600;1,400&family=Plus+Jakarta+Sans:wght@200;300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --luxury-green: #34d838;
+        --accent-gold: #c5a059;
+        --deep-forest: #1a2c23;
+        --glass: rgba(255, 255, 255, 0.7);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Plus Jakarta Sans", sans-serif;
+        background-color: var(--soft-sage);
+        color: var(--luxury-green);
+        overflow-x: hidden;
+        scroll-behavior: smooth;
+      }
+
+      h1,
+      h2,
+      h3,
+      h4,
+      .font-serif {
+        font-family: "Cormorant Display", serif;
+      }
+
+      /* Animaciones de Entrada */
+      .reveal-up {
+        opacity: 0;
+        transform: translateY(40px);
+        transition: all 1s cubic-bezier(0.22, 1, 0.36, 1);
+      }
+
+      .reveal-up.active {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Glassmorphism Evolved */
+      .premium-glass {
+        background: rgba(255, 255, 255, 0.45);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.4);
+      }
+
+      /* Botones de Lujo */
+      .btn-luxury {
+        background: var(--luxury-green);
+        color: white;
+        padding: 1rem 2.5rem;
+        border-radius: 100px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        transition: all 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+        border: 1px solid transparent;
+        display: inline-block;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .btn-luxury:hover {
+        background: transparent;
+        color: var(--luxury-green);
+        border-color: var(--luxury-green);
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(45, 79, 60, 0.1);
+      }
+
+      /* Efectos de Hover en Nav */
+      .nav-link {
+        position: relative;
+        font-size: 0.75rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+
+      .nav-link::after {
+        content: "";
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 1px;
+        background: var(--accent-gold);
+        transition: width 0.4s ease;
+      }
+
+      .nav-link:hover::after {
+        width: 100%;
+      }
+
+      /* Canvas Background */
+      #bg-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      /* Tarjetas de Servicio */
+      .service-card {
+        background: white;
+        border-radius: 40px;
+        transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 1px solid rgba(45, 79, 60, 0.05);
+        overflow: hidden;
+      }
+
+      .service-card:hover {
+        transform: translateY(-20px) scale(1.02);
+        box-shadow: 0 50px 100px rgba(45, 79, 60, 0.08);
+      }
+
+      /* Marquee Infinite */
+      @keyframes marquee {
+        0% {
+          transform: translateX(0);
+        }
+
+        100% {
+          transform: translateX(-50%);
+        }
+      }
+
+      .animate-marquee {
+        display: inline-block;
+        animation: marquee 50s linear infinite;
+      }
+
+      /* Blobs de Color */
+      .blob {
+        position: absolute;
+        filter: blur(100px);
+        opacity: 0.35;
+        z-index: -1;
+        pointer-events: none;
+        border-radius: 50%;
+        animation: blobFloat 25s infinite alternate;
+      }
+
+      @keyframes blobFloat {
+        0% {
+          transform: translate(0, 0) scale(1);
+        }
+
+        50% {
+          transform: translate(10%, 15%) scale(1.1);
+        }
+
+        100% {
+          transform: translate(-5%, -10%) scale(0.9);
+        }
+      }
+
+      /* Custom Accordion */
+      .faq-item {
+        border-bottom: 1px solid rgba(45, 79, 60, 0.1);
+      }
+
+      .faq-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.5s ease-out;
+      }
+
+      .faq-item.active .faq-content {
+        max-height: 200px;
+        padding-bottom: 2rem;
+      }
+
+      /* Before/After Slider */
+      .comparison-slider {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 16/9;
+        overflow: hidden;
+        border-radius: 30px;
+      }
+
+      .comparison-img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      }
+
+      .comparison-after {
+        clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background: var(--soft-sage);
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background: var(--luxury-green);
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Background Elements -->
+    <canvas id="bg-canvas"></canvas>
+    <div
+      class="blob w-[300px] h-[300px] md:w-[600px] md:h-[600px] bg-green-200 top-[-10%] left-[-10%]"
+    ></div>
+    <div
+      class="blob w-[250px] h-[250px] md:w-[500px] md:h-[500px] bg-yellow-100 bottom-[-10%] right-[-5%] animation-delay-[-7s]"
+    ></div>
+    <!-- Navegación Refinada -->
+    <nav
+      class="fixed w-full z-50 px-4 md:px-6 py-4 md:py-6 transition-all duration-700"
+      id="navbar"
+    >
+      <div
+        class="max-w-7xl mx-auto flex justify-between items-center premium-glass rounded-full px-6 md:px-8 py-3 md:py-4 shadow-xl border-white/50 bg-white/30 backdrop-blur-md"
+      >
+        <div
+          class="flex items-center space-x-3 md:space-x-4 cursor-pointer"
+          onclick="window.scrollTo({ top: 0, behavior: 'smooth' })"
+        >
+          <div
+            class="w-10 h-10 md:w-11 md:h-11 bg-[#2d4f3c] rounded-xl md:rounded-2xl flex items-center justify-center text-white font-serif text-xl md:text-2xl shadow-lg transform hover:rotate-6 transition-transform"
+          >
+            <img src="img/logo-dermoestetica.svg" alt="Logo" class="w-6 h-6 md:w-auto md:h-auto" />
+          </div>
+          <div class="block">
+            <span
+              class="text-lg md:text-xl font-bold tracking-tighter uppercase block leading-none"
+              >DermoEstética</span
+            >
+          </div>
+        </div>
+        
+        <!-- Desktop Menu -->
+        <div class="hidden lg:flex items-center space-x-8 xl:space-x-12">
+          <a href="#servicios" class="nav-link">Tratamientos</a>
+          <a href="#experiencia" class="nav-link">Experiencia</a>
+          <a href="#botica" class="nav-link">Botica</a>
+          <a href="#sedes" class="nav-link">Sedes</a>
+          <a
+            href="https://wa.me/59164135791"
+            class="btn-luxury !py-3.5 !px-8 !text-[9px] !shadow-none"
+            >Reservar Cita</a
+          >
+        </div>
+
+        <!-- Mobile Menu Toggle -->
+        <button
+          class="lg:hidden w-10 h-10 flex flex-col justify-center items-end space-y-1.5 focus:outline-none z-50 relative"
+          id="mobile-toggle"
+          onclick="toggleMobileMenu()"
+        >
+          <div class="w-6 h-0.5 bg-luxury-green transition-all duration-300" id="bar1"></div>
+          <div class="w-4 h-0.5 bg-luxury-green transition-all duration-300" id="bar2"></div>
+          <div class="w-5 h-0.5 bg-luxury-green transition-all duration-300" id="bar3"></div>
+        </button>
+      </div>
+
+      <!-- Mobile Menu Overlay -->
+      <div 
+        id="mobile-menu" 
+        class="fixed inset-0 bg-white/95 backdrop-blur-xl z-40 transform translate-x-full transition-transform duration-500 lg:hidden flex flex-col justify-center items-center space-y-8"
+      >
+        <a href="#servicios" class="text-3xl font-serif text-[#1a2c23] hover:text-[#c5a059] transition-colors" onclick="toggleMobileMenu()">Tratamientos</a>
+        <a href="#experiencia" class="text-3xl font-serif text-[#1a2c23] hover:text-[#c5a059] transition-colors" onclick="toggleMobileMenu()">Experiencia</a>
+        <a href="#botica" class="text-3xl font-serif text-[#1a2c23] hover:text-[#c5a059] transition-colors" onclick="toggleMobileMenu()">Botica</a>
+        <a href="#sedes" class="text-3xl font-serif text-[#1a2c23] hover:text-[#c5a059] transition-colors" onclick="toggleMobileMenu()">Sedes</a>
+        <a href="https://wa.me/59164135791" class="btn-luxury mt-8" onclick="toggleMobileMenu()">Reservar Cita</a>
+      </div>
+    </nav>
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center px-4 md:px-8 relative pt-24 md:pt-32">
+      <div class="max-w-7xl mx-auto grid lg:grid-cols-2 gap-16 items-center">
+        <div class="reveal-up active">
+          <div
+            class="inline-flex items-center space-x-2 py-2 px-5 rounded-full border border-green-200 text-[10px] font-bold uppercase tracking-[0.3em] mb-10 bg-white/60 shadow-sm"
+          >
+            <span
+              class="w-2 h-2 rounded-full bg-green-500 animate-pulse"
+            ></span>
+            <span>Certificación Médica Internacional</span>
+          </div>
+          <h1 class="text-5xl md:text-6xl lg:text-8xl mb-6 md:mb-10 leading-[0.95] tracking-tight">
+            La Maestría de <br />
+            <span class="italic text-accent-gold">tu Piel</span>
+          </h1>
+          <p
+            class="text-xl text-gray-500 font-light mb-14 max-w-lg leading-relaxed"
+          >
+            Redescubre tu belleza natural a través de protocolos médicos
+            avanzados y la sabiduría de nuestra botica magistral en Bolivia.
+          </p>
+          <div
+            class="flex flex-col sm:flex-row items-start sm:items-center gap-10"
+          >
+            <a href="#servicios" class="btn-luxury">Explorar Servicios</a>
+            <div class="flex items-center space-x-5">
+              <div class="flex -space-x-3">
+                <img
+                  src="https://i.pravatar.cc/100?u=1"
+                  class="w-10 h-10 rounded-full border-2 border-white"
+                />
+                <img
+                  src="https://i.pravatar.cc/100?u=2"
+                  class="w-10 h-10 rounded-full border-2 border-white"
+                />
+                <img
+                  src="https://i.pravatar.cc/100?u=3"
+                  class="w-10 h-10 rounded-full border-2 border-white"
+                />
+              </div>
+              <div class="text-[10px] uppercase tracking-widest leading-tight">
+                <span class="font-bold text-luxury-green">5,000+</span><br />
+                <span class="opacity-40">Pacientes Felices</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="relative reveal-up active" style="transition-delay: 0.3s">
+          <div
+            class="aspect-[4/5] rounded-[80px] overflow-hidden shadow-2xl transform rotate-2 hover:rotate-0 transition-all duration-1000 border-[16px] border-white relative z-10"
+          >
+            <img
+              src="https://images.unsplash.com/photo-1552693673-1bf958298935?q=80&w=1000&auto=format&fit=crop"
+              class="w-full h-full object-cover scale-105 hover:scale-100 transition-transform duration-1000"
+            />
+          </div>
+          <div
+            class="absolute -bottom-10 -right-10 premium-glass p-8 rounded-[40px] shadow-2xl z-20 max-w-[220px] text-center border-white/60"
+          >
+            <div class="text-4xl font-serif text-accent-gold mb-2">9+</div>
+            <div
+              class="text-[10px] uppercase tracking-[0.2em] font-bold opacity-60"
+            >
+              Años Liderando la Medicina Estética
+            </div>
+          </div>
+          <!-- Elemento decorativo flotante -->
+          <div
+            class="absolute -top-10 -left-10 w-32 h-32 bg-accent-gold/10 rounded-full border border-accent-gold/20 animate-spin-slow"
+          ></div>
+        </div>
+      </div>
+    </section>
+    <!-- Banner Infinito -->
+    <div
+      class="py-14 border-y border-green-100 overflow-hidden bg-white/40 backdrop-blur-sm whitespace-nowrap"
+    >
+      <div class="inline-block animate-marquee">
+        <span class="text-4xl font-serif italic mx-6 md:mx-12 opacity-40"
+          >Ácido Hialurónico</span
+        >
+        <span class="text-4xl font-serif italic mx-6 md:mx-12 opacity-40"
+          >Plasma Rico en Plaquetas</span
+        >
+        <span class="text-4xl font-serif italic mx-6 md:mx-12 opacity-40"
+          >Microblading Realista</span
+        >
+        <span class="text-4xl font-serif italic mx-6 md:mx-12 opacity-40"
+          >Botox Avanzado</span
+        >
+        <span class="text-4xl font-serif italic mx-6 md:mx-12 opacity-40"
+          >Dermatología Clínica</span
+        >
+        <span class="text-4xl font-serif italic mx-6 md:mx-12 opacity-40"
+          >Botica Magistral</span
+        >
+      </div>
+      <!-- Duplicado para loop sin saltos -->
+      <div class="inline-block animate-marquee">
+        <span class="text-4xl font-serif italic mx-6 md:mx-12 opacity-40"
+          >Ácido Hialurónico</span
+        >
+        <span class="text-4xl font-serif italic mx-6 md:mx-12 opacity-40"
+          >Plasma Rico en Plaquetas</span
+        >
+        <span class="text-4xl font-serif italic mx-6 md:mx-12 opacity-40"
+          >Microblading Realista</span
+        >
+        <span class="text-4xl font-serif italic mx-6 md:mx-12 opacity-40"
+          >Botox Avanzado</span
+        >
+        <span class="text-4xl font-serif italic mx-6 md:mx-12 opacity-40"
+          >Dermatología Clínica</span
+        >
+        <span class="text-4xl font-serif italic mx-6 md:mx-12 opacity-40"
+          >Botica Magistral</span
+        >
+      </div>
+    </div>
+    <!-- Servicios Detallados -->
+    <section id="servicios" class="py-20 px-4 md:py-32 md:px-8">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid lg:grid-cols-2 gap-10 md:gap-20 items-end mb-16 md:mb-24 reveal-up">
+          <h2 class="text-4xl md:text-6xl lg:text-7xl italic font-serif leading-tight">
+            Nuestra <br />Cartera de <br /><span class="text-accent-gold"
+              >Especialidades</span
+            >
+          </h2>
+          <p class="text-lg text-gray-500 font-light pb-4 leading-relaxed">
+            Cada rostro es un lienzo único. Diseñamos planes personalizados que
+            respetan tu fisionomía, buscando siempre la armonía y la salud
+            integral por encima de las tendencias pasajeras.
+          </p>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+          <!-- Tarjeta 1 -->
+          <div class="service-card group reveal-up">
+            <div class="h-80 overflow-hidden relative">
+              <img
+                src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?q=80&w=800&auto=format&fit=crop"
+                class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+              />
+              <div
+                class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-all"
+              ></div>
+            </div>
+            <div class="p-12">
+              <div class="flex justify-between items-start mb-6">
+                <h4 class="text-3xl font-serif">Facial Clínico</h4>
+                <span
+                  class="text-[9px] border border-gray-200 py-1 px-3 rounded-full font-bold uppercase tracking-widest"
+                  >Piel Sana</span
+                >
+              </div>
+              <ul
+                class="space-y-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-8"
+              >
+                <li class="flex items-center">
+                  <span
+                    class="w-1.5 h-1.5 bg-accent-gold rounded-full mr-3"
+                  ></span
+                  >PRP Facial y Capilar
+                </li>
+                <li class="flex items-center">
+                  <span
+                    class="w-1.5 h-1.5 bg-accent-gold rounded-full mr-3"
+                  ></span
+                  >MDA Diamante / Jade
+                </li>
+                <li class="flex items-center">
+                  <span
+                    class="w-1.5 h-1.5 bg-accent-gold rounded-full mr-3"
+                  ></span
+                  >Ácido Hialurónico
+                </li>
+                <li class="flex items-center">
+                  <span
+                    class="w-1.5 h-1.5 bg-accent-gold rounded-full mr-3"
+                  ></span
+                  >Toxina Botulínica
+                </li>
+              </ul>
+              <a
+                href="#"
+                class="text-[10px] font-bold tracking-[0.3em] uppercase border-b border-luxury-green pb-1 hover:text-accent-gold hover:border-accent-gold transition-all"
+                >Saber más</a
+              >
+            </div>
+          </div>
+          <!-- Tarjeta 2 -->
+          <div
+            class="service-card group reveal-up"
+            style="transition-delay: 0.2s"
+          >
+            <div class="h-80 overflow-hidden relative">
+              <img
+                src="https://images.unsplash.com/photo-1596178060671-7a80dc8059ea?q=80&w=800&auto=format&fit=crop"
+                class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+              />
+              <div
+                class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-all"
+              ></div>
+            </div>
+            <div class="p-12">
+              <div class="flex justify-between items-start mb-6">
+                <h4 class="text-3xl font-serif">Arquitectura de Mirada</h4>
+                <span
+                  class="text-[9px] border border-gray-200 py-1 px-3 rounded-full font-bold uppercase tracking-widest"
+                  >Arte</span
+                >
+              </div>
+              <ul
+                class="space-y-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-8"
+              >
+                <li class="flex items-center">
+                  <span
+                    class="w-1.5 h-1.5 bg-accent-gold rounded-full mr-3"
+                  ></span
+                  >Microblading Pelo a Pelo
+                </li>
+                <li class="flex items-center">
+                  <span
+                    class="w-1.5 h-1.5 bg-accent-gold rounded-full mr-3"
+                  ></span
+                  >Micropigmentación Labial
+                </li>
+                <li class="flex items-center">
+                  <span
+                    class="w-1.5 h-1.5 bg-accent-gold rounded-full mr-3"
+                  ></span
+                  >Full Lips Gloss Effect
+                </li>
+                <li class="flex items-center">
+                  <span
+                    class="w-1.5 h-1.5 bg-accent-gold rounded-full mr-3"
+                  ></span
+                  >Eyeliner de Precisión
+                </li>
+              </ul>
+              <a
+                href="#"
+                class="text-[10px] font-bold tracking-[0.3em] uppercase border-b border-luxury-green pb-1 transition-all"
+                >Consultar</a
+              >
+            </div>
+          </div>
+          <!-- Tarjeta 3 -->
+          <div
+            class="service-card group reveal-up"
+            style="transition-delay: 0.4s"
+          >
+            <div class="h-80 overflow-hidden relative">
+              <img
+                src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=800&auto=format&fit=crop"
+                class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+              />
+              <div
+                class="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-all"
+              ></div>
+            </div>
+            <div class="p-12">
+              <div class="flex justify-between items-start mb-6">
+                <h4 class="text-3xl font-serif">Dermo-Patología</h4>
+                <span
+                  class="text-[9px] border border-gray-200 py-1 px-3 rounded-full font-bold uppercase tracking-widest"
+                  >Medicina</span
+                >
+              </div>
+              <ul
+                class="space-y-4 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-8"
+              >
+                <li class="flex items-center">
+                  <span
+                    class="w-1.5 h-1.5 bg-accent-gold rounded-full mr-3"
+                  ></span
+                  >Control de Melasma / Acné
+                </li>
+                <li class="flex items-center">
+                  <span
+                    class="w-1.5 h-1.5 bg-accent-gold rounded-full mr-3"
+                  ></span
+                  >Eliminación de Verrugas
+                </li>
+                <li class="flex items-center">
+                  <span
+                    class="w-1.5 h-1.5 bg-accent-gold rounded-full mr-3"
+                  ></span
+                  >Tratamiento de Queloides
+                </li>
+                <li class="flex items-center">
+                  <span
+                    class="w-1.5 h-1.5 bg-accent-gold rounded-full mr-3"
+                  ></span
+                  >Cirugía Menor de Lunares
+                </li>
+              </ul>
+              <a
+                href="#"
+                class="text-[10px] font-bold tracking-[0.3em] uppercase border-b border-luxury-green pb-1 transition-all"
+                >Ver Clínica</a
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Nueva Sección: Antes y Después (Interactiva) -->
+    <section id="experiencia" class="py-20 px-4 md:py-32 md:px-8 bg-white/50">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center mb-20 reveal-up">
+          <h6
+            class="text-accent-gold text-[11px] font-bold uppercase tracking-[0.5em] mb-4"
+          >
+            Resultados Reales
+          </h6>
+          <h2 class="text-6xl font-serif italic mb-6">
+            La Transformación Consciente
+          </h2>
+        </div>
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+          <div class="comparison-slider shadow-2xl reveal-up">
+            <img
+              src="https://images.unsplash.com/photo-1616394584738-fc6e612e71b9?q=80&w=1000&auto=format&fit=crop"
+              class="comparison-img"
+            />
+            <div class="comparison-after bg-white/10 overflow-hidden">
+              <img
+                src="https://images.unsplash.com/photo-1512290923902-8a9f81dc236c?q=80&w=1000&auto=format&fit=crop"
+                class="comparison-img"
+              />
+            </div>
+          </div>
+          <div class="reveal-up" style="transition-delay: 0.3s">
+            <h4 class="text-4xl font-serif mb-8 italic">
+              Armonización Facial con Ácido Hialurónico
+            </h4>
+            <p class="text-gray-500 font-light leading-relaxed mb-10">
+              Observa cómo la recuperación de volúmenes estratégicos devuelve la
+              vitalidad al rostro sin alterar su esencia. Nuestros
+              procedimientos priorizan la elegancia y la sutileza.
+            </p>
+            <div class="space-y-6">
+            <div class="space-y-6">
+              <div class="flex items-start space-x-4 md:space-x-6">
+                <div
+                  class="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-green-50 flex items-center justify-center text-luxury-green shrink-0 text-sm md:text-base"
+                >
+                  01
+                </div>
+                <div>
+                  <h5 class="font-bold text-sm uppercase mb-1">
+                    Diagnóstico 3D
+                  </h5>
+                  <p class="text-xs text-gray-400">
+                    Analizamos cada capa de la piel antes de intervenir.
+                  </p>
+                </div>
+              </div>
+              <div class="flex items-start space-x-4 md:space-x-6">
+                <div
+                  class="w-10 h-10 md:w-12 md:h-12 rounded-xl md:rounded-2xl bg-green-50 flex items-center justify-center text-luxury-green shrink-0 text-sm md:text-base"
+                >
+                  02
+                </div>
+                <div>
+                  <h5 class="font-bold text-sm uppercase mb-1">Sin Dolor</h5>
+                  <p class="text-xs text-gray-400">
+                    Protocolos de confort y anestesia tópica de alta gama.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Botica Magistral (Estilo Noir/Luxury) -->
+    <section
+      id="botica"
+      class="py-20 px-6 md:py-32 md:px-8 bg-[#36d83f] text-white rounded-[40px] md:rounded-[100px] mx-2 md:mx-4 my-16 md:my-24 overflow-hidden relative"
+    >
+      <!-- Decoración fondo -->
+      <div
+        class="absolute top-0 right-0 w-[400px] md:w-[800px] h-[400px] md:h-[800px] bg-green-900/10 rounded-full blur-[80px] md:blur-[120px]"
+      ></div>
+      <div
+        class="max-w-7xl mx-auto relative z-10 grid lg:grid-cols-2 gap-12 md:gap-24 items-center"
+      >
+        <div class="reveal-up">
+          <!-- <span
+            class="text-accent-gold text-xs font-bold uppercase tracking-[0.5em] mb-6 md:mb-10 inline-block"
+            >Skin Alchemy</span
+          > -->
+          <h2
+            class="text-4xl md:text-6xl lg:text-7xl font-serif italic mb-6 md:mb-10 leading-tight"
+          >
+            La Botica <br /><span class="text-white/40">Dermocosmética</span>
+          </h2>
+          <p
+            class="text-white/60 text-lg font-light mb-14 leading-relaxed max-w-lg"
+          >
+            Nuestros preparados magistrales no se encuentran en farmacias
+            comerciales. Son formulaciones frescas, con activos puros como la
+            Centella Asiática y el Extracto de Arroz, diseñadas por nuestros
+            médicos.
+          </p>
+          <div class="flex flex-wrap gap-6 mb-16">
+            <div
+              class="bg-white/5 border border-white/10 py-4 px-8 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-accent-gold/20 transition-colors"
+            >
+              Vitamina C Pura
+            </div>
+            <div
+              class="bg-white/5 border border-white/10 py-4 px-8 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-accent-gold/20 transition-colors"
+            >
+              Retinol de Autor
+            </div>
+            <div
+              class="bg-white/5 border border-white/10 py-4 px-8 rounded-full text-[10px] font-bold uppercase tracking-widest hover:bg-accent-gold/20 transition-colors"
+            >
+              Serums Botánicos
+            </div>
+          </div>
+          <a
+            href="https://wa.me/59164135791"
+            class="btn-luxury !bg-white !text-[#0f1a15] hover:!bg-accent-gold hover:!text-white border-none"
+            >Catálogo Exclusivo</a
+          >
+        </div>
+        <div class="grid grid-cols-2 gap-8 reveal-up">
+          <div class="space-y-8 mt-12">
+            <div class="aspect-[4/5] rounded-[40px] overflow-hidden group">
+              <img
+                src="https://images.unsplash.com/photo-1556228720-195a672e8a03?q=80&w=600&auto=format&fit=crop"
+                class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+              />
+            </div>
+            <div class="bg-accent-gold p-10 rounded-[40px] text-[#0f1a15]">
+              <div class="text-4xl font-serif mb-4">100%</div>
+              <div class="text-xs font-bold uppercase tracking-widest">
+                Activos Orgánicos Certificados
+              </div>
+            </div>
+          </div>
+          <div class="space-y-8">
+            <div
+              class="bg-white/5 border border-white/10 p-10 rounded-[40px] h-48 flex items-center justify-center"
+            >
+              <div class="text-center">
+                <div class="text-accent-gold text-2xl font-serif mb-2">
+                  Libre de
+                </div>
+                <div class="text-[9px] uppercase tracking-[0.2em] opacity-50">
+                  Parabenos y Sulfatos
+                </div>
+              </div>
+            </div>
+            <div class="aspect-[4/5] rounded-[40px] overflow-hidden group">
+              <img
+                src="https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19?q=80&w=600&auto=format&fit=crop"
+                class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Sedes con Diseño Elegante -->
+    <section id="sedes" class="py-20 px-4 md:py-32 md:px-8">
+      <div class="max-w-7xl mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-24 reveal-up">
+          <h2 class="text-6xl font-serif italic mb-6">Nuestras Casas</h2>
+          <p class="text-gray-400 font-light italic">
+            Ubicaciones privilegiadas diseñadas para tu desconexión y bienestar
+            absoluto.
+          </p>
+        </div>
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-10">
+          <!-- Sede 1 -->
+          <div
+            class="premium-glass p-12 rounded-[50px] border-white hover:shadow-2xl transition-all reveal-up"
+          >
+            <span
+              class="text-[10px] font-bold text-accent-gold uppercase tracking-[0.4em] mb-6 inline-block"
+              >La Paz - Centro</span
+            >
+            <h4 class="text-3xl font-serif mb-6 italic">Calle Comercio</h4>
+            <p class="text-sm text-gray-500 font-light leading-relaxed mb-8">
+              Calle Comercio N°810, al lado de superfarmacia (Cerca al Reloj de
+              la Pérez).
+            </p>
+            <div
+              class="flex items-center justify-between pt-8 border-t border-black/5"
+            >
+              <div class="flex flex-col">
+                <span
+                  class="text-[8px] uppercase tracking-widest opacity-40 mb-1"
+                  >Teléfono Directo</span
+                >
+                <span class="text-sm font-bold">64135791</span>
+              </div>
+              <a
+                href="https://wa.me/59164135791"
+                class="w-12 h-12 bg-[#36d83f] text-white rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+          <!-- Sede 2 -->
+          <div
+            class="premium-glass p-12 rounded-[50px] border-white hover:shadow-2xl transition-all reveal-up active"
+          >
+            <span
+              class="text-[10px] font-bold text-accent-gold uppercase tracking-[0.4em] mb-6 inline-block"
+            >
+              La Paz - Centro
+            </span>
+            <h4 class="text-3xl font-serif mb-6 italic">El Prado</h4>
+            <p class="text-sm text-gray-500 font-light leading-relaxed mb-8">
+              Calle Colón esquina Mcal. Santa Cruz, Galería Litoral subsuelo Of.
+              2.
+            </p>
+            <div
+              class="flex items-center justify-between pt-8 border-t border-black/5"
+            >
+              <div class="flex flex-col">
+                <span
+                  class="text-[8px] uppercase tracking-widest opacity-40 mb-1"
+                >
+                  Teléfono Directo
+                </span>
+                <span class="text-sm font-bold">64135791</span>
+              </div>
+              <a
+                href="https://wa.me/59164135791"
+                class="w-12 h-12 bg-[#36d83f] text-white rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+          <!-- Sede 3 -->
+          <div
+            class="premium-glass p-12 rounded-[50px] border-white hover:shadow-2xl transition-all reveal-up"
+          >
+            <span
+              class="text-[10px] font-bold text-accent-gold uppercase tracking-[0.4em] mb-6 inline-block"
+              >La Paz - Centro</span
+            >
+            <h4 class="text-3xl font-serif mb-6 italic">Sopocachi </h4>
+            <p class="text-sm text-gray-500 font-light leading-relaxed mb-8">
+Belisario Salinas esquina Capitán Ravelo, policonsultorio los Ángeles 294
+            </p>
+            <div
+              class="flex items-center justify-between pt-8 border-t border-black/5"
+            >
+              <div class="flex flex-col">
+                <span
+                  class="text-[8px] uppercase tracking-widest opacity-40 mb-1"
+                  >Teléfono Directo</span
+                >
+                <span class="text-sm font-bold">64135791</span>
+              </div>
+              <a
+                href="https://wa.me/59164135791"
+                class="w-12 h-12 bg-[#36d83f] text-white rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+          <!-- Sede 4 -->
+          <div
+            class="premium-glass p-12 rounded-[50px] border-white hover:shadow-2xl transition-all reveal-up active"
+          >
+            <span
+              class="text-[10px] font-bold text-accent-gold uppercase tracking-[0.4em] mb-6 inline-block"
+            >
+              La Paz - Centro
+            </span>
+            <h4 class="text-3xl font-serif mb-6 italic">Miraflores</h4>
+            <p class="text-sm text-gray-500 font-light leading-relaxed mb-8">
+Av. Saavedra, esquina Villalobos, al lado del colegio Dora Schmidt, edificio independencia oficina 7 
+            </p>
+            <div
+              class="flex items-center justify-between pt-8 border-t border-black/5"
+            >
+              <div class="flex flex-col">
+                <span
+                  class="text-[8px] uppercase tracking-widest opacity-40 mb-1"
+                >
+                  Teléfono Directo
+                </span>
+                <span class="text-sm font-bold">64135791</span>
+              </div>
+              <a
+                href="https://wa.me/59164135791"
+                class="w-12 h-12 bg-[#36d83f] text-white rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+          <!-- Sede 5 -->
+          <div
+            class="premium-glass p-12 rounded-[50px] border-white hover:shadow-2xl transition-all reveal-up active"
+          >
+            <span
+              class="text-[10px] font-bold text-accent-gold uppercase tracking-[0.4em] mb-6 inline-block"
+            >
+              La Paz - Centro
+            </span>
+            <h4 class="text-3xl font-serif mb-6 italic">San Miguel </h4>
+            <p class="text-sm text-gray-500 font-light leading-relaxed mb-8">
+Av. Montenegro edificio Arcángel, oficina 6
+            </p>
+            <div
+              class="flex items-center justify-between pt-8 border-t border-black/5"
+            >
+              <div class="flex flex-col">
+                <span
+                  class="text-[8px] uppercase tracking-widest opacity-40 mb-1"
+                >
+                  Teléfono Directo
+                </span>
+                <span class="text-sm font-bold">64135791</span>
+              </div>
+              <a
+                href="https://wa.me/59164135791"
+                class="w-12 h-12 bg-[#36d83f] text-white rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+                    <!-- Sede 6 -->
+          <div
+            class="premium-glass p-12 rounded-[50px] border-white hover:shadow-2xl transition-all reveal-up active"
+          >
+            <span
+              class="text-[10px] font-bold text-accent-gold uppercase tracking-[0.4em] mb-6 inline-block"
+            >
+              La Paz - El Alto
+            </span>
+            <h4 class="text-3xl font-serif mb-6 italic">Ciudad satelite </h4>
+            <p class="text-sm text-gray-500 font-light leading-relaxed mb-8">
+Av. del policía, al lado de sofia al paso, torre Montenegro piso 4 
+            </p>
+            <div
+              class="flex items-center justify-between pt-8 border-t border-black/5"
+            >
+              <div class="flex flex-col">
+                <span
+                  class="text-[8px] uppercase tracking-widest opacity-40 mb-1"
+                >
+                  Teléfono Directo
+                </span>
+                <span class="text-sm font-bold">64135791</span>
+              </div>
+              <a
+                href="https://wa.me/59164135791"
+                class="w-12 h-12 bg-[#36d83f] text-white rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+          <!-- Sede 7 (Enfatizada Sucre) -->
+          <div
+            class="premium-glass p-12 rounded-[50px] border-white hover:shadow-2xl transition-all reveal-up active"
+            style="
+              background: rgba(255, 255, 255, 0.3);
+              backdrop-filter: blur(10px);
+            "
+          >
+            <span
+              class="text-[10px] font-bold text-red-700 uppercase tracking-[0.4em] mb-6 inline-block"
+              >Sucre - Capital</span
+            >
+            <h4 class="text-3xl font-serif mb-6 italic text-red-700">
+              Calle Colón
+            </h4>
+            <p class="text-sm text-gray-600 font-light leading-relaxed mb-8">
+              Calle Colón N° 780 PB frente al Hospital de la Mujer. Consultorio
+              7.
+            </p>
+            <div
+              class="flex items-center justify-between pt-8 border-t border-red-100"
+            >
+              <div class="flex flex-col">
+                <span
+                  class="text-[8px] uppercase tracking-widest opacity-40 mb-1 text-red-900/50"
+                  >Atención Especial</span
+                >
+                <span class="text-sm font-bold text-red-800">64106944</span>
+              </div>
+              <a
+                href="https://wa.me/59164106944"
+                class="w-12 h-12 bg-red-700 text-white rounded-full flex items-center justify-center"
+              >
+                <svg
+                  class="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                  />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- FAQ / Preguntas Frecuentes -->
+    <section class="py-20 px-4 md:py-32 md:px-8 bg-white/30">
+      <div class="max-w-4xl mx-auto">
+        <h2 class="text-4xl md:text-5xl font-serif italic text-center mb-12 md:mb-20 reveal-up">
+          Consultas Frecuentes
+        </h2>
+        <div class="space-y-4 reveal-up">
+          <div class="faq-item group">
+            <button
+              class="w-full py-8 flex justify-between items-center text-left"
+              onclick="toggleFaq(this)"
+            >
+              <span class="text-lg font-semibold tracking-tight uppercase"
+                >¿Requieren tiempo de recuperación?</span
+              >
+              <span
+                class="w-8 h-8 rounded-full border border-luxury-green flex items-center justify-center text-xl transition-transform group-active:rotate-45"
+                >+</span
+              >
+            </button>
+            <div class="faq-content">
+              <p class="text-gray-500 font-light leading-relaxed">
+                La mayoría de nuestros tratamientos son "lunch-time procedures".
+                Podrás reincorporarte a tu vida social o laboral de inmediato,
+                con recomendaciones mínimas como el uso de protector solar y
+                evitar el ejercicio intenso las primeras 24h.
+              </p>
+            </div>
+          </div>
+          <div class="faq-item group">
+            <button
+              class="w-full py-8 flex justify-between items-center text-left"
+              onclick="toggleFaq(this)"
+            >
+              <span class="text-lg font-semibold tracking-tight uppercase"
+                >¿Los resultados se ven artificiales?</span
+              >
+              <span
+                class="w-8 h-8 rounded-full border border-luxury-green flex items-center justify-center text-xl"
+                >+</span
+              >
+            </button>
+            <div class="faq-content">
+              <p class="text-gray-500 font-light leading-relaxed">
+                Nuestra filosofía se basa en la naturalidad. Aplicamos la "Regla
+                de Oro" de la proporción para que los demás noten que te ves
+                mejor, pero no logren identificar qué te has hecho.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+   <!-- Footer de Lujo -->
+<footer
+  class="relative z-10 bg-[#36d83f] text-white pt-20 pb-12 px-4 md:pt-32 md:px-8 mt-16 md:mt-24"
+>
+  <div class="absolute top-0 left-0 w-full h-px bg-white/10"></div>
+  <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col items-center text-center mb-2">
+      <div>
+        <div class="text-5xl font-serif italic mb-10">DermoEstética</div>
+        <p
+          class="text-white/60 text-xl font-light leading-relaxed max-w-md mb-12"
+        >
+          Líderes en medicina estética avanzada y dermocosmética orgánica en
+          Bolivia. Belleza segura, resultados memorables.
+        </p>
+        <div class="flex justify-center space-x-12 mb-16">
+          <!-- Instagram -->
+          <a href="https://www.instagram.com/dermoesteticalp/" class="flex flex-col items-center group" target="_blank">
+            <svg
+              class="w-10 h-10 mb-2 hover:text-[#c5a059] transition-colors duration-300"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"
+              />
+            </svg>
+            <span
+              class="text-xs tracking-[0.3em] uppercase opacity-80 group-hover:text-[#c5a059] transition-colors"
+            >
+              Instagram
+            </span>
+          </a>
+          
+          <!-- TikTok -->
+          <a href="https://www.tiktok.com/@dermoesteticalp" class="flex flex-col items-center group" target="_blank">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="w-10 h-10 mb-2 hover:text-[#c5a059] transition-colors duration-300"
+              shape-rendering="geometricPrecision"
+              text-rendering="geometricPrecision"
+              image-rendering="optimizeQuality"
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              viewBox="0 0 461 512.235"
+            >
+              <g fill-rule="nonzero">
+                <path
+                  fill="white"
+                  d="M370.934 98.964c19.378 19.981 43.543 32.158 67.898 37.7v-15.005c-22.884-1.621-46.823-8.822-67.898-22.695zM230.952 0v335.533c0 43.959-31.593 72.234-70.009 72.234-12.743 0-24.844-2.978-35.363-8.483 13.346 17.041 34.421 26.843 57.531 26.843 38.417 0 70.01-28.275 70.01-72.272V18.322h60.886C312.348 12.479 310.99 6.371 309.934 0h-78.982zM181 195.062v-16.627c-7.691-1.281-15.382-1.696-21.753-1.696C72.573 176.739 0 246.296 0 332.555c0 56.626 27.559 105.033 69.444 133.685-29.18-28.953-47.276-69.481-47.276-115.362 0-86.109 72.347-155.628 158.832-155.816z"
+                />
+                <path
+                  fill="white"
+                  d="M318.87 329.991c0 107.144-81.96 163.921-159.209 163.921-33.44 0-64.505-10.103-90.217-27.672 28.879 28.652 68.616 45.995 112.385 45.995 77.248 0 159.208-56.777 159.208-163.921V173.723c-7.69-5.203-15.08-11.272-22.167-18.36v174.628zm-193.289 69.294c-9.426-11.914-15.043-27.334-15.043-45.43 0-50.782 39.698-77.624 92.629-72.045v-85.052c-7.69-1.282-15.381-1.697-21.79-1.697H181v68.389c-52.931-5.542-92.63 21.263-92.63 72.083 0 29.707 15.193 52.252 37.211 63.752zm313.251-262.621v63.525c-35.174 0-68.464-6.711-97.795-26.466 34.157 34.157 75.59 44.826 119.963 44.826v-78.567a137.713 137.713 0 01-22.168-3.318zm-67.898-37.701c-18.737-19.265-33.026-45.806-38.832-80.641h-18.095c10.329 37.663 31.592 63.94 56.927 80.641z"
+                />
+                <path
+                  fill="white"
+                  d="M159.661 493.912c77.248 0 159.209-56.777 159.209-163.921V155.364c7.088 7.087 14.477 13.157 22.168 18.359 29.33 19.755 62.62 26.466 97.794 26.466v-63.525c-24.354-5.542-48.52-17.72-67.898-37.7-25.335-16.702-46.597-42.979-56.928-80.641H253.12v335.533c0 43.996-31.593 72.271-70.009 72.271-23.111 0-44.185-9.801-57.531-26.842-22.017-11.499-37.21-34.044-37.21-63.751 0-50.821 39.698-77.626 92.63-72.084v-68.388c-86.485.189-158.832 69.708-158.832 155.815 0 45.882 18.096 86.409 47.277 115.363 25.711 17.569 56.776 27.672 90.216 27.672z"
+                />
+              </g>
+            </svg>
+            <span
+              class="text-xs tracking-[0.3em] uppercase opacity-80 group-hover:text-[#c5a059] transition-colors"
+            >
+              TikTok
+            </span>
+          </a>
+          
+          <!-- Facebook -->
+          <a href="https://www.facebook.com/profile.php?id=61582721035785" class="flex flex-col items-center group" target="_blank">
+            <svg
+              class="w-10 h-10 mb-2 hover:text-[#c5a059] transition-colors duration-300"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"
+              />
+            </svg>
+            <span
+              class="text-xs tracking-[0.3em] uppercase opacity-80 group-hover:text-[#c5a059] transition-colors"
+            >
+              Facebook
+            </span>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div
+      class="pt-12 border-t border-white/5 flex flex-col items-center text-center text-white"
+    >
+      <span class="italic text-base mb-2">Medicina · Arte · Ciencia</span>
+      <span class="text-sm tracking-[0.3em] uppercase"
+        >© 2026 DermoEstética - Desarrollado por AndesCode</span
+      >
+    </div>
+  </div>
+</footer>
+    <!-- WhatsApp Floating -->
+    <a
+      href="https://wa.me/59164135791"
+      class="fixed bottom-10 right-10 z-[100] group"
+    >
+      <div
+        class="relative w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-2xl transition-all duration-500 group-hover:scale-110 group-hover:rotate-12"
+      >
+        <svg class="w-8 h-8 fill-[#25D366]" viewBox="0 0 24 24">
+          <path
+            d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413Z"
+          />
+        </svg>
+        <div
+          class="absolute inset-0 bg-green-400/20 rounded-full animate-ping"
+        ></div>
+      </div>
+    </a>
+    <script>
+      // 1. Sistema de Partículas Ligero con Three.js
+      const canvas = document.querySelector("#bg-canvas");
+      let renderer, scene, camera, particles;
+
+      function initParticles() {
+        renderer = new THREE.WebGLRenderer({
+          canvas,
+          antialias: true,
+          alpha: true,
+        });
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limitar DPI en dispositivos móviles
+        renderer.setSize(window.innerWidth, window.innerHeight);
+
+        scene = new THREE.Scene();
+
+        camera = new THREE.PerspectiveCamera(
+          75,
+          window.innerWidth / window.innerHeight,
+          0.1,
+          1000,
+        );
+        camera.position.z = 100;
+
+        // Geometría de partículas (reducida a 150)
+        const particleCount = 150;
+        const positions = new Float32Array(particleCount * 3);
+        const colors = new Float32Array(particleCount * 3);
+
+        for (let i = 0; i < particleCount; i++) {
+          const i3 = i * 3;
+          // Distribución uniforme en un cubo grande
+          positions[i3] = (Math.random() - 0.5) * 300;
+          positions[i3 + 1] = (Math.random() - 0.5) * 300;
+          positions[i3 + 2] = (Math.random() - 0.5) * 300;
+
+          // Colores verdes suaves
+          colors[i3] = 0.4 + Math.random() * 0.2; // R
+          colors[i3 + 1] = 0.7 + Math.random() * 0.2; // G
+          colors[i3 + 2] = 0.5 + Math.random() * 0.2; // B
+        }
+
+        const geometry = new THREE.BufferGeometry();
+        geometry.setAttribute(
+          "position",
+          new THREE.BufferAttribute(positions, 3),
+        );
+        geometry.setAttribute("color", new THREE.BufferAttribute(colors, 3));
+
+        // Material de partículas optimizado
+        const material = new THREE.PointsMaterial({
+          size: 1.8, // Tamaño reducido
+          vertexColors: true,
+          transparent: true,
+          opacity: 0.5,
+          sizeAttenuation: true,
+          depthWrite: false, // Crucial para rendimiento
+        });
+
+        particles = new THREE.Points(geometry, material);
+        scene.add(particles);
+
+        function animate() {
+          requestAnimationFrame(animate);
+          // Rotación suave del sistema de partículas
+          particles.rotation.x += 0.0002;
+          particles.rotation.y += 0.0003;
+
+          renderer.render(scene, camera);
+        }
+        animate();
+      }
+
+      // 2. Intersection Observer para Revelaciones
+      function initReveal() {
+        const observerOptions = { threshold: 0.15 };
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("active");
+            }
+          });
+        }, observerOptions);
+        document
+          .querySelectorAll(".reveal-up")
+          .forEach((el) => observer.observe(el));
+      }
+
+      // 3. Lógica de FAQ
+      function toggleFaq(btn) {
+        const item = btn.parentElement;
+        const isActive = item.classList.contains("active");
+        // Cerrar otros
+        document
+          .querySelectorAll(".faq-item")
+          .forEach((el) => el.classList.remove("active"));
+        if (!isActive) {
+          item.classList.add("active");
+        }
+      }
+
+      // 4. Scroll Effects
+      window.addEventListener("scroll", () => {
+        const nav = document.getElementById("navbar");
+        const glass = nav.querySelector(".max-w-7xl");
+        if (window.scrollY > 80) {
+          glass.style.paddingTop = "0.75rem";
+          glass.style.paddingBottom = "0.75rem";
+          glass.classList.add("!bg-white/90", "shadow-2xl");
+        } else {
+          glass.style.paddingTop = "1rem";
+          glass.style.paddingBottom = "1rem";
+          glass.classList.remove("!bg-white/90", "shadow-2xl");
+        }
+      });
+
+      // 5. Inicialización Global
+      window.addEventListener("load", () => {
+        initParticles();
+        initReveal();
+      });
+
+      // Resize listener
+      window.addEventListener("resize", () => {
+        if (camera) {
+          camera.aspect = window.innerWidth / window.innerHeight;
+          camera.updateProjectionMatrix();
+          renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+      });
+
+      // Mobile Menu Logic
+      function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        const bar1 = document.getElementById('bar1');
+        const bar2 = document.getElementById('bar2');
+        const bar3 = document.getElementById('bar3');
+        const body = document.body;
+        
+        menu.classList.toggle('translate-x-full');
+        
+        // Hamburger Animation
+        if (!menu.classList.contains('translate-x-full')) {
+          bar1.classList.add('rotate-45', 'translate-y-2');
+          bar2.classList.add('opacity-0');
+          bar3.classList.add('-rotate-45', '-translate-y-2');
+          body.style.overflow = 'hidden';
+        } else {
+          bar1.classList.remove('rotate-45', 'translate-y-2');
+          bar2.classList.remove('opacity-0');
+          bar3.classList.remove('-rotate-45', '-translate-y-2');
+          body.style.overflow = 'auto';
+        }
+      }
+    </script>
+  </body>
+</html>
